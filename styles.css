@@ -1,0 +1,304 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'IBM Plex Mono', serif;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background: white;
+}
+
+/* Menu Styles (Keep as provided or ensure consistency) */
+.menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.5s ease, visibility 0s linear 0.5s;
+  pointer-events: none;
+}
+.menu.active {
+  visibility: visible;
+  opacity: 1;
+  transition-delay: 0s;
+  pointer-events: all;
+}
+.menu a {
+  color: white;
+  text-decoration: none;
+  font-size: 28px;
+  margin: 20px 0;
+  transition: opacity 0.3s ease;
+}
+.menu a:hover {
+  opacity: 0.7;
+}
+.close-btn {
+  /* Make sure this is usable/style as needed */
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  font-size: 24px;
+  font-weight: 200;
+  color: white;
+  cursor: pointer;
+  z-index: 1001;
+  /* Add basic button resets if needed */
+  background: none;
+  border: none;
+  padding: 5px;
+  line-height: 1;
+}
+.close-btn:hover {
+  opacity: 0.7;
+}
+button:focus-visible,
+div[role='button']:focus-visible,
+.close-btn:focus-visible {
+  /* Add focus style */
+  outline: 3px solid dodgerblue;
+  outline-offset: 2px;
+}
+
+/* Header Styles */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  letter-spacing: 0.05em;
+  z-index: 50; /* Above carousel */
+}
+.name-phot {
+  font-size: 28px;
+  font-weight: 300;
+  z-index: 30;
+  color: #010101;
+} /* Ensure visible */
+/* Ensure #menu-btn uses this if it's a div, or style the button element if changed */
+.corner-element {
+  cursor: pointer;
+  font-size: 24px;
+  font-weight: 200;
+  color: #010101;
+  /* Add basic button resets if needed */
+  background: none;
+  border: none;
+  padding: 0;
+}
+.corner-element:hover {
+  opacity: 0.7;
+}
+
+/* About Page Container */
+.container {
+  position: relative; /* For absolute positioning children */
+  width: 100vw;
+  height: 100vh;
+  display: flex; /* Keep center alignment for body's children */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+}
+
+/* Carousel/Slideshow Element */
+#carousel {
+  /* Use the ID from HTML */
+  position: absolute;
+  /* Center element if needed, depends on parent */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%; /* Takes full width */
+  height: 80vh; /* Default height */
+  background-size: contain; /* Default: fit whole image */
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 1; /* Start visible */
+  transition: opacity 0.8s ease-in-out; /* Transition for fade */
+  z-index: 1; /* Base layer */
+}
+
+/* Overlay for End Transition */
+#overlay {
+  /* Use the ID from HTML */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent; /* Start transparent */
+  transition: background-color 1.5s ease-in;
+  z-index: 2; /* Above carousel */
+  pointer-events: none;
+}
+#overlay.active {
+  /* State class added by JS */
+  background: white;
+}
+
+/* Countdown Timer */
+#countdown {
+  /* Use the ID from HTML */
+  position: absolute;
+  bottom: 20px; /* <<< Default position: bottom right */
+  right: 20px;
+  font-size: 18px;
+  color: #010101;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.7); /* Make background visible */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3; /* Above overlay */
+  transition: opacity 0.5s ease-out;
+}
+#countdown.hidden {
+  /* State class added by JS */
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Final Text Container */
+#text-container {
+  /* Use the ID from HTML */
+  display: flex; /* Use flex for centering content */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  /* Center within the viewport */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%; /* Allow text to take width */
+  max-width: 500px; /* But limit max width */
+  height: auto; /* Height based on content */
+
+  text-align: center;
+  opacity: 0;
+  visibility: hidden; /* Use visibility */
+  transition: opacity 1.5s ease-in 0.5s, visibility 0s linear 2s; /* Delay visibility change */
+  z-index: 4; /* Above overlay */
+  pointer-events: none;
+}
+
+#text-container.visible {
+  /* State class added by JS */
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s, 0s; /* Show immediately */
+  pointer-events: auto;
+}
+
+.about-text {
+  /* Style the individual text blocks */
+  padding: 15px 25px;
+  margin: 10px 0; /* Adjust vertical spacing */
+  text-decoration: none;
+  color: #fff;
+  background: #010101;
+  font-size: 20px;
+  border-radius: 3px;
+  width: auto; /* Allow button-like width based on text */
+  display: inline-block; /* Allow margin auto or flex centering */
+}
+
+/* Footer Styles */
+.footer {
+  display: flex;
+  justify-content: center; /* Center footer content */
+  align-items: center;
+  width: 100%;
+  padding: 10px 0; /* Adjust padding */
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 10; /* Ensure footer is potentially visible if needed */
+  pointer-events: none; /* Avoid interfering with slideshow */
+}
+.footer p {
+  pointer-events: auto; /* Allow interaction with text if needed */
+  color: #555; /* Example color */
+  font-size: 0.8rem;
+}
+
+/* --- Media Queries --- */
+
+/* Mobile Specific Adjustments */
+@media (max-width: 480px) {
+  /* Make carousel full screen */
+  #carousel {
+    height: 100%; /* Full height */
+    background-size: cover; /* Cover the area */
+    /* transform: none; */ /* Remove transform if it interferes */
+    /* top: 0; left: 0; */ /* Position top-left */
+  }
+
+  /* Adjust countdown position slightly up */
+  #countdown {
+    bottom: 40px; /* Raise slightly from the bottom */
+    right: 15px; /* Slightly more inset */
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+
+  /* Adjust text container width */
+  #text-container {
+    width: 90%;
+  }
+  .about-text {
+    font-size: 16px;
+    padding: 12px 18px;
+  }
+
+  /* Adjust header/menu button size */
+  .name-phot,
+  .corner-element {
+    font-size: 18px;
+  }
+  .header {
+    padding: 1rem;
+  }
+
+  .footer {
+    display: none;
+  } /* Hide footer on mobile slideshow */
+}
+
+/* Tablet Adjustments (Optional) */
+@media screen and (min-width: 481px) and (max-width: 880px) {
+  .name-phot,
+  .corner-element {
+    font-size: 24px;
+  }
+  .about-text {
+    font-size: 18px;
+  }
+  /* Keep default countdown position unless needed */
+  /* #countdown { bottom: 30px; right: 30px; } */
+}
+
+/* Ensure your other styles (.corner-element-con, .name-phot-con, .menu-text, etc.) */
+/* are either not needed on this page or defined correctly if shared */
